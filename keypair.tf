@@ -14,5 +14,5 @@ data "tls_public_key" "private_key_pem" {
 
 resource "local_file" "ssh_key" {
   filename = "${aws_key_pair.temp_keypair.key_name}.pem"
-  content = tls_private_key.ed25519.private_key_pem
+  content  = tls_private_key.ed25519.private_key_pem
 }

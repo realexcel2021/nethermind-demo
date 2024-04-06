@@ -15,7 +15,7 @@ module "sg" {
       description = "ssh to instance"
       cidr_blocks = "0.0.0.0/0"
     },
-        {
+    {
       from_port   = 8545
       to_port     = 8545
       protocol    = "tcp"
@@ -37,10 +37,6 @@ module "sg" {
 }
 
 
-# get account ID
-data "aws_caller_identity" "current" {}
-
-
 # get latest ubuntu ami
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -58,18 +54,18 @@ data "aws_ami" "ubuntu" {
 }
 
 module "ec2_instance" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
+  source = "terraform-aws-modules/ec2-instance/aws"
 
-  name = "single-instance"
+  name = "nethermind-instance"
 
-  ami                    = data.aws_ami.ubuntu.id
+  ami                         = data.aws_ami.ubuntu.id
   associate_public_ip_address = true
-  instance_type          = "t2.micro"
-  key_name               = aws_key_pair.temp_keypair.key_name
-  monitoring             = true
-  vpc_security_group_ids = [ module.sg.security_group_id ]
-  subnet_id              = aws_subnet.main.id
-  
+  instance_type               = "t2.micro"
+  key_name                    = aws_key_pair.temp_keypair.key_name
+  monitoring                  = true
+  vpc_security_group_ids      = [module.sg.security_group_id]
+  subnet_id                   = aws_subnet.main.id
+
   user_data = file("${path.module}/script.sh")
 
   root_block_device = [{
